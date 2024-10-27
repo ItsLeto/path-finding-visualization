@@ -1,0 +1,94 @@
+# Guidelines are based on the LLVM style guide http://llvm.org/docs/CodingStandards.html
+BasedOnStyle: LLVM
+
+
+##############################
+# Handling of includes
+#
+
+# Enable sorting of includes
+# Reference: http://llvm.org/docs/CodingStandards.html#include-style
+SortIncludes: true
+
+# Sort includes according to categories
+# Reference: http://llvm.org/docs/CodingStandards.html#include-style
+# Category 0: (Automatic) The main header for a source file
+# Category 1: All files which follow the defined naming convention
+# Category 2: Other non-library files
+# Category 3: Library files with a .h/.hpp ending
+# Category 4: Library files without a .h/.hpp ending (Standard Library)
+IncludeCategories:
+  - Regex:           '^".*'
+    Priority:        1
+  - Regex:           '^<.*(.h|.hpp)>'
+    Priority:        3
+  - Regex:           '^<.*>'
+    Priority:        4
+  - Regex:           '.*'
+    Priority:        2
+
+
+##############################
+# Indentation
+#
+
+IndentWidth: 4
+NamespaceIndentation: None
+IndentCaseLabels: true
+
+
+##############################
+# Line Breaking
+#
+
+ColumnLimit: 160
+ReflowComments: true
+BreakBeforeBraces: 'Custom'
+BinPackArguments: false
+BinPackParameters: false
+ExperimentalAutoDetectBinPacking: false
+AllowShortFunctionsOnASingleLine: None
+AllowAllParametersOfDeclarationOnNextLine: false
+AlwaysBreakTemplateDeclarations: true
+AlwaysBreakAfterReturnType: None
+PenaltyBreakBeforeFirstCallParameter: 100
+PenaltyReturnTypeOnItsOwnLine: 200
+BraceWrapping: {
+    AfterClass: 'false',
+    AfterControlStatement: 'false',
+    AfterEnum : 'false',
+    AfterFunction : 'false',
+    AfterNamespace : 'false',
+    AfterStruct : 'false',
+    AfterUnion : 'false',
+    BeforeCatch : 'false',
+    BeforeElse : 'false',
+    IndentBraces : 'false'
+}
+BreakConstructorInitializers: AfterColon
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+
+
+##############################
+# Spacing
+#
+
+SpaceAfterCStyleCast: false
+SpaceAfterTemplateKeyword: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: false
+SpacesInAngles: false
+SpacesInCStyleCastParentheses: false
+SpacesInContainerLiterals: false
+SpacesInParentheses: false
+
+
+##############################
+# Alignment
+#
+
+PointerAlignment: Left
+AlignAfterOpenBracket: Align
+AlignOperands: true
+AlignTrailingComments: true

@@ -1,0 +1,19 @@
+{
+     "editor.tabSize": 4,
+     "editor.insertSpaces": true,
+     "C_Cpp.doxygen.generatedStyle": "///",
+     "C_Cpp.doxygen.generateOnType": true,
+     "C_Cpp.errorSquiggles": "Enabled",
+     "C_Cpp.default.cppStandard": "c++17",
+     "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+     "C_Cpp.codeAnalysis.runAutomatically": true,
+     "[cmake]": {
+          "editor.defaultFormatter": "josetr.cmake-language-support-vscode"
+     },
+     "[c]": {
+          "editor.defaultFormatter": "ms-vscode.cpptools"
+     },
+     "[cpp]": {
+          "editor.defaultFormatter": "ms-vscode.cpptools"
+     }
+}
