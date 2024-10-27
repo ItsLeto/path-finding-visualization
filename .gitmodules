@@ -6,3 +6,6 @@
 	path = thirdparty/olcPixelGameEngine
 	url = git@github.com:OneLoneCoder/olcPixelGameEngine.git
 	branch = v2.28
+[submodule "thirdparty/fmt"]
+	path = thirdparty/fmt
+	url = git@github.com:fmtlib/fmt.git

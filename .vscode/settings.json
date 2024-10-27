@@ -15,5 +15,18 @@
      },
      "[cpp]": {
           "editor.defaultFormatter": "ms-vscode.cpptools"
+     },
+     "files.associations": {
+          "chrono": "cpp",
+          "random": "cpp",
+          "limits": "cpp",
+          "semaphore": "cpp",
+          "algorithm": "cpp",
+          "concepts": "cpp",
+          "string_view": "cpp",
+          "ranges": "cpp",
+          "deque": "cpp",
+          "string": "cpp",
+          "vector": "cpp"
      }
 }
