@@ -66,21 +66,38 @@ class PathFinding : public olc::PixelGameEngine {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         Clear(olc::BLACK);
 
+        auto distance = [](auto n1, auto n2) { return std::sqrt((n1->x - n2->x) * (n1->x - n2->x) + (n1->y - n2->y) * (n1->y - n2->y)); };
+        auto heuristic = [&](auto n1, auto n2) { return distance(n1, n2); };
+        auto is_not_wall = [](auto n) { return !n->is_wall; };
+        auto is_not_visited = [](auto n) { return !n->visited; };
+        auto print_fscore = [](auto n) { fmt::print("{:.2f} ", n->f); };
+        auto lowest_fscore = [&](auto n1, auto n2) { return n1->f > n2->f; };
+
         constexpr int NODE_SIZE{32};
         for (const auto& node : m_grid) {
             if (node.is_wall) {
-                continue;
-            }
-            // fmt::println("node {} {}", node.x, node.y);
-            for (const auto& neighbrous : node.neighbours) {
-                if (neighbrous->is_wall) {
-                    continue;
+                for (const auto& neighbrous : node.neighbours) {
+                    if (!neighbrous->is_wall) {
+                        continue;
+                    }
+                    const int ncx = (node.x * NODE_SIZE) + NODE_SIZE / 2;
+                    const int ncy = (node.y * NODE_SIZE) + NODE_SIZE / 2;
+                    const int neighbrous_cx = (neighbrous->x * NODE_SIZE) + NODE_SIZE / 2;
+                    const int neighbrous_cy = (neighbrous->y * NODE_SIZE) + NODE_SIZE / 2;
+                    DrawLine(ncx, ncy, neighbrous_cx, neighbrous_cy, olc::GREY);
                 }
-                const int ncx = (node.x * NODE_SIZE) + NODE_SIZE / 2;
-                const int ncy = (node.y * NODE_SIZE) + NODE_SIZE / 2;
-                const int neighbrous_cx = (neighbrous->x * NODE_SIZE) + NODE_SIZE / 2;
-                const int neighbrous_cy = (neighbrous->y * NODE_SIZE) + NODE_SIZE / 2;
-                DrawLine(ncx, ncy, neighbrous_cx, neighbrous_cy, olc::BLUE);
+            } else {
+                // fmt::println("node {} {}", node.x, node.y);
+                for (const auto& neighbrous : node.neighbours | std::views::filter(is_not_wall)) {
+                    if (neighbrous->is_wall) {
+                        continue;
+                    }
+                    const int ncx = (node.x * NODE_SIZE) + NODE_SIZE / 2;
+                    const int ncy = (node.y * NODE_SIZE) + NODE_SIZE / 2;
+                    const int neighbrous_cx = (neighbrous->x * NODE_SIZE) + NODE_SIZE / 2;
+                    const int neighbrous_cy = (neighbrous->y * NODE_SIZE) + NODE_SIZE / 2;
+                    DrawLine(ncx, ncy, neighbrous_cx, neighbrous_cy, olc::BLUE);
+                }
             }
         }
 
@@ -95,30 +112,30 @@ class PathFinding : public olc::PixelGameEngine {
         }
         draw_node(node_end, olc::GREEN);
         draw_node(node_start, olc::RED);
-        // for (auto& neighbour : node_start->neighbours) {
-        //     FillCircle((neighbour->x * NODE_SIZE) + NODE_SIZE / 2, (neighbour->y * NODE_SIZE) + NODE_SIZE / 2, NODE_SIZE / 2 - 4, olc::YELLOW);
-        // }
 
-        auto distance = [](auto n1, auto n2) { return std::sqrt((n1->x - n2->x) * (n1->x - n2->x) + (n1->y - n2->y) * (n1->y - n2->y)); };
-        auto heuristic = [&](auto n1, auto n2) { return distance(n1, n2); };
-        auto is_not_wall = [](auto n) { return !n->is_wall; };
-        auto is_not_visited = [](auto n) { return !n->visited; };
-        auto print_fscore = [](auto n) { fmt::print("{:.2f} ", n->f); };
-        auto lowest_fscore = [&](auto n1, auto n2) { return n1->f > n2->f; };
-
+        olc::vi2d mouse_pos = GetMousePos();
         if (GetMouse(0).bReleased) {
-            olc::vi2d mouse_pos = GetMousePos();
             // fmt::println("Mouse One Pressed {} {}", mouse_pos.x, mouse_pos.y);
             if (GetKey(olc::Key::R).bHeld) {
                 node_start = &m_grid.at(to_index(mouse_pos.y / NODE_SIZE, mouse_pos.x / NODE_SIZE));
+                node_start->is_wall = false;
             } else if (GetKey(olc::Key::N).bHeld) {
                 node_end = &m_grid.at(to_index(mouse_pos.y / NODE_SIZE, mouse_pos.x / NODE_SIZE));
+                node_end->is_wall = false;
             } else {
                 auto& node = m_grid.at(to_index(mouse_pos.y / NODE_SIZE, mouse_pos.x / NODE_SIZE));
                 node.is_wall = !node.is_wall;
                 node.visited = false;
             }
             solve_astar();
+        } else if (GetMouse(0).bHeld) {
+            auto& node = m_grid.at(to_index(mouse_pos.y / NODE_SIZE, mouse_pos.x / NODE_SIZE));
+            node.is_wall = true;
+            node.visited = false;
+        } else if (GetMouse(1).bHeld) {
+            auto& node = m_grid.at(to_index(mouse_pos.y / NODE_SIZE, mouse_pos.x / NODE_SIZE));
+            node.is_wall = false;
+            node.visited = false;
         }
 
         if (GetKey(olc::Key::X).bReleased) {
